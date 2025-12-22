@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .notification-list {
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+        }
+
+        .notification {
+            display: flex;
+            background: #fff;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-picture img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .notification-body {
+            flex: 1;
+        }
+
+        .notification-body b {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .notification-body span {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .notification-body small {
+            color: gray;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Notifications</h1>
+    <button id="clear-btn">مسح كل التنبيهات</button>
+
+    <div class="notification-list" id="notification-list">
+        <!-- التنبيهات هتظهر هنا -->
+    </div>
+
+    <script>
+        // قائمة أسماء حقيقية وصورهم
+        const users = [
+            { name: "Ahmed Ali", img: "n2.png" },
+            { name: "Sara Mohamed", img: "n3.png" },
+            { name: "Omar Hassan", img: "n4.png" },
+            { name: "Mona Khaled", img: "n5.png" },
+            { name: "Ali Mostafa", img: "m1.jpg" }
+        ];
+
+        // مصفوفة التنبيهات
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+        // دالة الوقت النسبي
+        function timeAgo(date) {
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            if (diff < 60) return 'Just Now';
+            if (diff < 3600) return Math.floor(diff / 60) + ' min ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' hours ago';
+            if (diff < 604800) return Math.floor(diff / 86400) + ' days ago';
+            return new Date(date).toLocaleDateString();
+        }
+
+        // عرض التنبيهات
+        function renderNotifications() {
+            const list = document.getElementById('notification-list');
+            list.innerHTML = "";
+            notifications.forEach(notify => {
+                const div = document.createElement('div');
+                div.classList.add('notification');
+                div.innerHTML = `
+                <div class="profile-picture">
+                    <img src="${notify.img}" alt="">
+                </div>
+                <div class="notification-body">
+                    <b>${notify.username}</b>
+                    <span>${notify.text}</span>
+                    <small>${timeAgo(notify.time)}</small>
+                </div>
+            `;
+                list.appendChild(div);
+            });
+            // حفظ التنبيهات في LocalStorage
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        // دالة لإضافة تنبيه جديد
+        function addNotification(username, text, img) {
+            if (notifications.length >= 10) return; // ما نزيدش عن 10
+            notifications.unshift({ username, text, img, time: new Date() });
+            renderNotifications();
+        }
+
+        // محاكاة أحداث عشوائية: لايك، تعليق، متابعة
+        const events = [
+            (user) => `${user.name} liked your post.`,
+            (user) => `${user.name} commented: "Great job!"`,
+            (user) => `${user.name} started following you.`
+        ];
+
+        // إضافة حدث جديد كل 3 ثواني بشكل عشوائي
+        setInterval(() => {
+            if (notifications.length >= 10) return; // ما نزيدش عن 10
+            const user = users[Math.floor(Math.random() * users.length)];
+            const event = events[Math.floor(Math.random() * events.length)];
+            addNotification(user.name, event(user), user.img);
+        }, 10000);
+
+        // تحديث الوقت كل دقيقة
+        setInterval(renderNotifications, 60000);
+
+        // عرض أول مرة
+        renderNotifications();
+    </script>
+
+<script>
+    // زر المسح
+    const clearBtn = document.getElementById('clear-btn');
+    clearBtn.addEventListener('click', () => {
+        notifications = []; // مسح المصفوفة
+        localStorage.removeItem('notifications'); // مسح من LocalStorage
+        renderNotifications(); // إعادة العرض الفارغ
+    });
+</script>
+
+<style>
+    #clear-btn {
+        display: block;
+        margin: 0 auto 20px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        background: red;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    #clear-btn:hover {
+        background: darkred;
+    }
+</style>
+
+
+</body>
+
+</html>
