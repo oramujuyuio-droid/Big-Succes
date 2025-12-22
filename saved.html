@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Saved Videos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+  #back-home-btn {
+    position: absolute;
+    left: 1%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 2000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    text-align: center;
+}
+
+/* حالة الإخفاء */
+#back-home-btn.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 📱 موبايل */
+@media (max-width: 600px) {
+    #back-home-btn {
+        top: auto;
+        bottom: 20px;
+        left: 12px;
+        transform: none;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+
+</style>
+<body>
+
+    <h2 style="text-align:center">Saved Posts</h2>
+
+    <div class="feeds" id="savedFeeds"></div>
+     <a href="index.html" id="back-home-btn">🏠</a>
+
+    <script>
+        const savedFeeds = document.getElementById("savedFeeds");
+
+function getPosts() {
+  return JSON.parse(localStorage.getItem("posts")) || [];
+}
+
+function createPostHTML(post) {
+  return `
+    <div class="feed">
+      <div class="caption">
+        <p>${post.text}</p>
+      </div>
+
+      ${post.image ? `<img src="${post.image}" style="width:100%">` : ""}
+
+      <div>❤️ ${post.likes} Likes</div>
+      
+
+      <div class="comments-list">
+        ${post.comments.map(c => `<div class="comment">${c}</div>`).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderSavedPosts() {
+  const posts = getPosts();
+  const likedPosts = posts.filter(p => p.liked);
+
+  if (likedPosts.length === 0) {
+    savedFeeds.innerHTML = "<p>No saved posts yet</p>";
+    return;
+  }
+
+  likedPosts.forEach(post => {
+    savedFeeds.innerHTML += createPostHTML(post);
+  });
+}
+
+renderSavedPosts();
+
+
+
+    </script>
+</body>
+
+</html>
