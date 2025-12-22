@@ -4,6 +4,63 @@
     box-sizing: border-box;
 }
 
+/* Dark Mode */
+body.dark {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark nav {
+    background-color: #1f1f1f;
+}
+
+body.dark .menu-item {
+    color: #e0e0e0;
+}
+
+body.dark .menu-item:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+body.dark .feeds,
+body.dark .main-middle,
+body.dark .right,
+body.dark aside {
+    background-color: #1e1e1e;
+}
+
+body.dark .feed {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+}
+
+body.dark .create-post input,
+body.dark .comment-box input,
+body.dark .chat-input input,
+body.dark .search-bar input,
+body.dark textarea {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+body.dark .btn-create,
+body.dark .btn-post {
+    background-color: #444;
+    color: #fff;
+}
+
+body.dark .notification-box,
+body.dark .notification {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+}
+
+body.dark .bottom-nav {
+    background-color: #1f1f1f;
+}
+
 :root {
     --primary: hsl(252, 75%, 60%);
     --light: hsl(252, 30%, 95%);
@@ -20,15 +77,30 @@ body.dark {
     --gray: hsl(252, 15%, 65%);
 }
 
-.like-btn {
-    cursor: pointer;
+.chat-page {
+    display: none;
 }
 
-.like-btn.active {
-    color: red;
+.chat-page.active {
+    display: flex;
+}
+
+.feed img {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    position: relative;
 }
 
 .like-btn.active i {
+    color: red;
     animation: pop 0.3s ease;
 }
 
@@ -46,30 +118,9 @@ body.dark {
     }
 }
 
-.like-btn {
-    cursor: pointer;
-}
-
-.like-btn.active {
-    color: red;
-}
-
-.like-btn.active i {
-    animation: pop 0.3s ease;
-}
-
-@keyframes pop {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.4);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+.like-count {
+    margin-left: 4px;
+    font-size: 14px;
 }
 
 .comment-box {
@@ -205,6 +256,8 @@ aside {
     background: var(--light);
 }
 
+
+
 .notfy-counter {
     background: red;
     color: white;
@@ -213,17 +266,39 @@ aside {
     border-radius: 10px;
 }
 
-/* Notifications */
 .notification-box {
     display: none;
-    margin: 1rem 0;
-    background: var(--light);
-    border-radius: var(--radius);
-    padding: .5rem;
 }
 
-.notification-box.show {
+.notification-box.active {
     display: block;
+
+
+}
+
+.comment-box {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.comment-box input {
+    flex: 1;
+    padding: 5px;
+}
+
+.comment-box button {
+    padding: 5px 10px;
+}
+
+.comments-list .comment {
+    padding: 3px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.notification {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
 }
 
 /* Create Post Button */
@@ -1716,7 +1791,9 @@ main .right {
     object-fit: contain;
     border-radius: 0.5rem;
 }
-
+aside a .profile{
+    text-decoration: none;
+}
 .story-preview .remove-media {
     position: absolute;
     top: 0.5rem;
@@ -1864,3 +1941,96 @@ main .right {
         justify-content: center;
     }
 }
+.feed {
+    position: relative;
+}
+
+/* bookmark container */
+.feed .bookmark {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+}
+
+/* icon */
+.bookmark-btn i {
+    font-size: 22px;
+    color: #fff;
+    /* أبيض */
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* hover */
+.bookmark-btn i:hover {
+    transform: scale(1.15);
+}
+
+/* active (saved) */
+.bookmark-btn.active i {
+    color: #ffd43b;
+    /* ذهبي زي إنستجرام */
+}
+.create-post {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.post-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    background-color: #f0f2f5;
+    padding: 10px 15px;
+    border-radius: 25px;
+}
+
+.profile-pic {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-input-wrapper input[type="text"] {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+}
+
+.upload-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #6c5ce7;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.upload-icon:hover {
+    background-color: #d0c8ff;
+}
+
+.btn-post {
+    padding: 8px 15px;
+    border: none;
+    background-color: #6c5ce7;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
