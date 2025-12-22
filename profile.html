@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        :root{
+            --primary: hsl(252, 75%, 60%);
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 700px;
+            margin: auto;
+            background: #f8f8f8;
+        }
+
+        .profile-page {
+            margin-bottom: 30px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .profile-header .profile-picture {
+            position: relative;
+        }
+
+        .profile-header .profile-picture img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-header button {
+            margin-top: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .profile-header button:hover {
+            background: #5a4bcd;
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .profile-info h2 {
+            margin: 0;
+        }
+
+        .profile-info p {
+            margin: 3px 0 0 0;
+            color: #555;
+        }
+        .btn-create{
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 5px;
+        }
+        .btn-create:hover {
+            opacity: 0.9;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background: white;
+            padding: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-posts .feed {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .feed .head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .feed .profile-post img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .edit-post,
+        .delete-post{
+            margin-left: 30px;
+        }
+        
+        .ation-button {
+            margin: 5px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .like-btn {
+            cursor: pointer;
+            color: #e74c3c;
+            user-select: none;
+        }
+
+        .like-btn.active {
+            font-weight: bold;
+        }
+
+        .comment-box {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .comment-box input {
+            flex: 1;
+            padding: 5px;
+            min-width: 150px;
+        }
+
+        .comment-box button {
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .comments-list .comment {
+            padding: 3px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* إشعارات */
+        #notifications-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 250px;
+        }
+
+        .notification {
+            background: #6c5ce7;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            word-break: break-word;
+        }
+        #back-home-btn {
+    position: absolute;
+    left: 1%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 2000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* حالة الإخفاء */
+#back-home-btn.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 📱 موبايل */
+@media (max-width: 600px) {
+    #back-home-btn {
+        top: auto;
+        bottom: 20px;
+        left: 12px;
+        transform: none;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+
+
+    </style>
+</head>
+
+<body>
+    <button id="back-home-btn" title="Home">🏠</button>
+
+    <div id="notifications-container"></div>
+
+    <div class="profile-page">
+        <div class="profile-header">
+            <div class="profile-picture">
+                <img id="profile-img" src="profile-1.jpeg" alt="Profile">
+                <input type="file" id="profile-img-input" hidden>
+                <button id="change-img-btn">Change Photo</button>
+            </div>
+            <div class="profile-info">
+                <h2 id="profile-name">Beg Joker</h2>
+                <p id="profile-username">@thebegjoker</p>
+                <button id="edit-profile-btn">Edit Profile</button>
+            </div>
+        </div>
+
+        <div class="profile-stats">
+            <div><b id="total-posts">0</b> Posts</div>
+            <div><b id="total-likes">0</b> Likes</div>
+            <div><b id="total-comments">0</b> Comments</div>
+            <div><b id="total-Followers">0</b> Followers</div>
+            <div><b id="total-Following">0</b> Following</div>
+        </div>
+
+        <div class="profile-posts"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const profileImg = document.getElementById("profile-img");
+            let lastScrollY = window.scrollY;
+            const backHomeBtn = document.getElementById("back-home-btn");
+
+            window.addEventListener("scroll", () => {
+                const currentScroll = window.scrollY;
+
+                if (currentScroll > lastScrollY) {
+                    // ⬇ المستخدم بينزل
+                    backHomeBtn.classList.add("hide");
+                } else {
+                    // ⬆ المستخدم بيطلع
+                    backHomeBtn.classList.remove("hide");
+                }
+
+                lastScrollY = currentScroll;
+            });
+            const profileName = document.getElementById("profile-name");
+            const profileUsername = document.getElementById("profile-username");
+            const editBtn = document.getElementById("edit-profile-btn");
+            const changeImgBtn = document.getElementById("change-img-btn");
+            const profileImgInput = document.getElementById("profile-img-input");
+            const profilePosts = document.querySelector(".profile-posts");
+            const totalPostsEl = document.getElementById("total-posts");
+            const totalLikesEl = document.getElementById("total-likes");
+            const totalCommentsEl = document.getElementById("total-comments");
+            const notificationsContainer = document.getElementById("notifications-container");
+
+            let profile = JSON.parse(localStorage.getItem("profile")) || {
+                img: "profile-1.jpeg",
+                name: "Beg Joker",
+                username: "@thebegjoker"
+            };
+
+            let posts = JSON.parse(localStorage.getItem("posts")) || [
+                { id: 1, text: "Hello World!", image: "", likes: 5, liked: false, comments: ["Nice post!"], createdAt: Date.now() },
+                { id: 2, text: "My second post", image: "", likes: 2, liked: false, comments: ["Cool!"], createdAt: Date.now() - 1000 }
+            ];
+
+            function showNotification(message) {
+                const notif = document.createElement("div");
+                notif.className = "notification";
+                notif.textContent = message;
+                notificationsContainer.appendChild(notif);
+                setTimeout(() => notif.style.opacity = "1", 10);
+                setTimeout(() => { notif.style.opacity = "0"; setTimeout(() => notif.remove(), 300); }, 3000);
+            }
+
+            function loadProfile() {
+                profileImg.src = profile.img;
+                profileName.textContent = profile.name;
+                profileUsername.textContent = profile.username;
+            }
+
+            function saveProfile() {
+                localStorage.setItem("profile", JSON.stringify(profile));
+            }
+
+            loadProfile();
+
+            editBtn.addEventListener("click", () => {
+                const newName = prompt("Enter your name:", profile.name);
+                if (!newName) return;
+                const newUsername = prompt("Enter your username:", profile.username);
+                if (!newUsername) return;
+                profile.name = newName.trim();
+                profile.username = newUsername.trim();
+                saveProfile();
+                loadProfile();
+                updatePostsProfile();
+                updateCommentsProfile();
+            });
+
+            changeImgBtn.addEventListener("click", () => profileImgInput.click());
+            profileImgInput.addEventListener("change", () => {
+                const file = profileImgInput.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    profile.img = reader.result;
+                    saveProfile();
+                    loadProfile();
+                    updatePostsProfile();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            function renderPosts() {
+                profilePosts.innerHTML = "";
+                posts.sort((a, b) => b.createdAt - a.createdAt).forEach(post => {
+                    const feed = document.createElement("div");
+                    feed.className = "feed";
+                    feed.dataset.id = post.id;
+                    feed.innerHTML = `
+        <div class="head">
+          <div class="profile-post">
+            <img src="${profile.img}" class="feed-profile-img">
+          </div>
+          <div class="info">
+            <h3 class="feed-username">${profile.name}</h3>
+          </div>
+        </div>
+        <div class="caption"><p><b>${profile.name}</b> ${post.text}</p></div>
+        <div class="ation-button">
+          <span class="like-btn ${post.liked ? 'active' : ''}">❤️ Like <span class="like-count">${post.likes}</span></span>
+          💬 ${post.comments.length} Comments
+        </div>
+        <div class="post-actions">
+        <button class="edit-post btn-create">✏️ Edit</button>
+        <button class="delete-post btn-create">🗑️ Delete</button>
+        </div>
+
+        <div class="comments-list"></div>
+        <div class="comment-box">
+          <input type="text" placeholder="Write a comment...">
+          <button>Send</button>
+        </div>
+      `;
+
+                    // لايك
+                    const likeBtn = feed.querySelector(".like-btn");
+                    const likeCountSpan = likeBtn.querySelector(".like-count");
+                    likeBtn.addEventListener("click", () => {
+                        post.liked = !post.liked;
+                        post.likes += post.liked ? 1 : -1;
+                        post.likes = Math.max(0, post.likes);
+                        likeCountSpan.textContent = post.likes;
+                        localStorage.setItem("posts", JSON.stringify(posts));
+                        showNotification(`You ${post.liked ? "liked" : "unliked"} a post!`);
+                        updateStats();
+                    });
+                    // حذف البوست
+                    const deleteBtn = feed.querySelector(".delete-post");
+                    deleteBtn.addEventListener("click", () => {
+                        if (confirm("Are you sure you want to delete this post?")) {
+                            posts = posts.filter(p => p.id !== post.id);
+                            localStorage.setItem("posts", JSON.stringify(posts));
+                            renderPosts();
+                            showNotification("Post deleted 🗑️");
+                        }
+                    });
+                    // تعديل البوست
+                    const editBtnPost = feed.querySelector(".edit-post");
+                    editBtnPost.addEventListener("click", () => {
+                        const newText = prompt("Edit your post:", post.text);
+                        if (newText && newText.trim() !== "") {
+                            post.text = newText.trim();
+                            localStorage.setItem("posts", JSON.stringify(posts));
+                            renderPosts();
+                            showNotification("Post edited ✏️");
+                        }
+                    });
+
+                    // التعليقات
+                    const list = feed.querySelector(".comments-list");
+                    post.comments.forEach(c => {
+                        const div = document.createElement("div");
+                        div.className = "comment";
+                        div.dataset.user = "self";
+                        div.innerHTML = `<b class="comment-username">${profile.name}</b>: ${c}`;
+                        list.appendChild(div);
+                    });
+
+                    const input = feed.querySelector(".comment-box input");
+                    const btn = feed.querySelector(".comment-box button");
+                    btn.addEventListener("click", () => {
+                        const text = input.value.trim();
+                        if (!text) return;
+                        post.comments.push(text);
+                        localStorage.setItem("posts", JSON.stringify(posts));
+                        const div = document.createElement("div");
+                        div.className = "comment";
+                        div.dataset.user = "self";
+                        div.innerHTML = `<b class="comment-username">${profile.name}</b>: ${text}`;
+                        list.appendChild(div);
+                        input.value = "";
+                        updateStats();
+                        showNotification(`You commented: "${text}"`);
+                    });
+
+                    profilePosts.appendChild(feed);
+                });
+
+                updateStats();
+            }
+
+            function updateStats() {
+                totalPostsEl.textContent = posts.length;
+                totalLikesEl.textContent = posts.reduce((a, b) => a + b.likes, 0);
+                totalCommentsEl.textContent = posts.reduce((a, b) => a + b.comments.length, 0);
+            }
+
+            function updatePostsProfile() {
+                document.querySelectorAll(".feed").forEach(feed => {
+                    const img = feed.querySelector(".feed-profile-img");
+                    const usernameEl = feed.querySelector(".feed-username");
+                    const captionName = feed.querySelector(".caption b");
+                    if (img) img.src = profile.img;
+                    if (usernameEl) usernameEl.textContent = profile.name;
+                    if (captionName) captionName.textContent = profile.name;
+                });
+            }
+
+            function updateCommentsProfile() {
+                document.querySelectorAll(".comment[data-user='self'] .comment-username").forEach(el => {
+                    el.textContent = profile.name;
+                });
+            }
+
+            renderPosts();
+        });
+        const backHomeBtn = document.getElementById("back-home-btn");
+
+            backHomeBtn.addEventListener("click", () => {
+                window.location.href = "index.html"; // اسم صفحة الهوم
+            });
+
+    </script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
